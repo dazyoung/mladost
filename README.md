@@ -1,4 +1,4 @@
-# Mladost - A Dog's World
+# Mladost
 
 A relaxing 2D exploration game where you play as a dog roaming through a peaceful village and its surrounding meadows. Inspired by the charm of Stardew Valley, built entirely with Claude Code.
 

@@ -45,8 +45,21 @@ export class InputManager {
         </div>
       </div>
       <div id="touch-buttons">
-        <button id="btn-interact" class="touch-btn">E</button>
-        <button id="btn-music" class="touch-btn touch-btn-small">M</button>
+        <button id="btn-interact" class="touch-btn" aria-label="Interact">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="currentColor">
+            <circle cx="9" cy="6" r="3.5"/>
+            <circle cx="21" cy="6" r="3.5"/>
+            <circle cx="5" cy="14" r="3.5"/>
+            <circle cx="25" cy="14" r="3.5"/>
+            <ellipse cx="15" cy="20" rx="6" ry="5"/>
+          </svg>
+        </button>
+        <button id="btn-music" class="touch-btn touch-btn-small" aria-label="Toggle Music">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+            <path d="M14 2v10.3A3.5 3.5 0 1 0 16 15.5V5h-2V2h2V0h-4v2z"/>
+            <circle cx="12.5" cy="15.5" r="2.5"/>
+          </svg>
+        </button>
       </div>
     `;
     document.getElementById('game-container').appendChild(this.touchControls);
