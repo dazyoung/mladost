@@ -346,7 +346,8 @@ export class NPCDog {
     }
   }
 
-  respond(message) {
+  // Template-based response (used as fallback)
+  respondTemplate(message) {
     this.interactionCount++;
     const intent = this.detectIntent(message);
     let response = this.generateResponse(intent, message);
@@ -355,6 +356,41 @@ export class NPCDog {
     this.chatHistory.push({ from: 'npc', text: response });
 
     // Keep history manageable
+    if (this.chatHistory.length > 20) {
+      this.chatHistory = this.chatHistory.slice(-20);
+    }
+
+    return response;
+  }
+
+  // LLM-powered response (async, falls back to template)
+  async respond(message, llmClient = null) {
+    this.interactionCount++;
+    this.chatHistory.push({ from: 'player', text: message });
+
+    let response;
+
+    if (llmClient && llmClient.isConfigured) {
+      const result = await llmClient.sendMessage(this, message, this.chatHistory.slice(0, -1));
+
+      if (result && result.text) {
+        response = result.text;
+      } else {
+        // LLM failed, use template fallback
+        const intent = this.detectIntent(message);
+        response = this.generateResponse(intent, message);
+        if (result && result.error === 'invalid_key') {
+          response += ' (API key invalid — using offline mode)';
+        }
+      }
+    } else {
+      // No LLM, use template
+      const intent = this.detectIntent(message);
+      response = this.generateResponse(intent, message);
+    }
+
+    this.chatHistory.push({ from: 'npc', text: response });
+
     if (this.chatHistory.length > 20) {
       this.chatHistory = this.chatHistory.slice(-20);
     }
