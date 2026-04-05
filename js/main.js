@@ -434,7 +434,16 @@ class Game {
     }
 
     // Update player
-    const event = this.player.update(dt, this.input.keys, this.world);
+    // Convert screen touch target to world coordinates
+    let touchTarget = null;
+    if (this.input.touchMoveTarget) {
+      touchTarget = {
+        x: this.input.touchMoveTarget.screenX + this.camera.x,
+        y: this.input.touchMoveTarget.screenY + this.camera.y,
+      };
+    }
+
+    const event = this.player.update(dt, this.input.keys, this.world, touchTarget);
 
     if (event) {
       const regularBones = this.world.collectibles.filter(c => !c.isGolden).length;

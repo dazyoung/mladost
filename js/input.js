@@ -18,6 +18,10 @@ export class InputManager {
 
     this.isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
+    // Touch-to-move: stores screen position where user is touching
+    this.touchMoveTarget = null; // { screenX, screenY } or null
+    this.touchMoveTouchId = null;
+
     this._keyDown = this._keyDown.bind(this);
     this._keyUp = this._keyUp.bind(this);
 
@@ -32,6 +36,7 @@ export class InputManager {
 
     if (this.isMobile) {
       this.createTouchControls();
+      this.setupTouchToMove();
     }
   }
 
@@ -210,6 +215,45 @@ export class InputManager {
       e.preventDefault();
       this.justPressed.addDog = true;
     }, { passive: false });
+  }
+
+  setupTouchToMove() {
+    const canvas = document.getElementById('game-canvas');
+    if (!canvas) return;
+
+    canvas.addEventListener('touchstart', (e) => {
+      // Only handle touches on the canvas itself (not on UI elements)
+      if (e.target !== canvas) return;
+      // Don't interfere with joystick (left 1/3 of screen) or buttons (right 1/6)
+      const touch = e.changedTouches[0];
+      const screenW = window.innerWidth;
+      if (touch.clientX < screenW * 0.25 || touch.clientX > screenW * 0.82) return;
+
+      e.preventDefault();
+      this.touchMoveTouchId = touch.identifier;
+      this.touchMoveTarget = { screenX: touch.clientX, screenY: touch.clientY };
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+      for (const touch of e.changedTouches) {
+        if (touch.identifier === this.touchMoveTouchId) {
+          e.preventDefault();
+          this.touchMoveTarget = { screenX: touch.clientX, screenY: touch.clientY };
+        }
+      }
+    }, { passive: false });
+
+    const endTouch = (e) => {
+      for (const touch of e.changedTouches) {
+        if (touch.identifier === this.touchMoveTouchId) {
+          this.touchMoveTarget = null;
+          this.touchMoveTouchId = null;
+        }
+      }
+    };
+
+    canvas.addEventListener('touchend', endTouch);
+    canvas.addEventListener('touchcancel', endTouch);
   }
 
   updateJoystick(touchX, touchY, knobEl) {

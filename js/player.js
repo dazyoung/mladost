@@ -29,14 +29,30 @@ export class Player {
     this.interacting = false;
   }
 
-  update(dt, keys, world) {
+  update(dt, keys, world, touchTarget = null) {
     let dx = 0;
     let dy = 0;
 
-    if (keys.up) dy -= 1;
-    if (keys.down) dy += 1;
-    if (keys.left) dx -= 1;
-    if (keys.right) dx += 1;
+    // Touch-to-move: move toward world-space target
+    if (touchTarget) {
+      const tdx = touchTarget.x - this.getCenterX();
+      const tdy = touchTarget.y - this.getCenterY();
+      const dist = Math.sqrt(tdx * tdx + tdy * tdy);
+      if (dist > 8) { // dead zone so dog doesn't jitter at target
+        dx = tdx / dist;
+        dy = tdy / dist;
+      }
+    }
+
+    // Keyboard/joystick override
+    if (keys.up || keys.down || keys.left || keys.right) {
+      dx = 0;
+      dy = 0;
+      if (keys.up) dy -= 1;
+      if (keys.down) dy += 1;
+      if (keys.left) dx -= 1;
+      if (keys.right) dx += 1;
+    }
 
     // Normalize diagonal movement
     if (dx !== 0 && dy !== 0) {
