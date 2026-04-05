@@ -72,13 +72,17 @@ export class World {
     this.createDarkGrass(45, 20, 5, 4);
     this.createDarkGrass(30, 40, 4, 3);
 
-    // Add bridge over river
-    this.tiles[20][24] = TILES.BRIDGE;
-    this.tiles[20][25] = TILES.BRIDGE;
-    this.tiles[20][26] = TILES.BRIDGE;
-    this.tiles[19][24] = TILES.BRIDGE;
-    this.tiles[19][25] = TILES.BRIDGE;
-    this.tiles[19][26] = TILES.BRIDGE;
+    // Add bridge over river - must cover full river width across the path rows
+    // River wobbles, so we need to bridge all water tiles at y=19,20,21
+    for (let by = 18; by <= 22; by++) {
+      const wobble = Math.floor(Math.sin(by * 0.3) * 2);
+      for (let dx = -2; dx <= 2; dx++) {
+        const bx = 25 + wobble + dx;
+        if (bx >= 0 && bx < this.width) {
+          this.tiles[by][bx] = TILES.BRIDGE;
+        }
+      }
+    }
 
     // Place objects
     this.placeObjects();
@@ -395,10 +399,12 @@ export class World {
   placeCollectibles() {
     const bonePositions = [
       [9, 9], [22, 6], [38, 18], [48, 35], [15, 44],
-      [50, 6], [28, 38], [5, 35], [42, 14], [55, 25],
+      [50, 6], [28, 38], [3, 30], [46, 14], [55, 25],
       [20, 30], [33, 22],
     ];
     for (const [x, y] of bonePositions) {
+      // Skip bones that would land on water
+      if (this.getTile(x, y) === TILES.WATER) continue;
       this.collectibles.push({
         type: OBJECTS.BONE,
         x: x * TILE_SIZE,

@@ -18,6 +18,7 @@ A relaxing 2D exploration game where you play as a dog roaming through a peacefu
 
 ## Features
 
+- 6 selectable dog breeds (Golden, Husky, Chocolate, Dalmatian, Shiba, Black Lab)
 - Pixel art dog character with directional walk animations
 - Procedurally generated sprite art (no external image assets)
 - Tile-based world with grass, paths, water, sand, and bridges
@@ -101,3 +102,24 @@ This project was built interactively using [Claude Code](https://claude.ai/code)
 - Touch event handling with dead zone and directional threshold
 - Prevents default touch behaviors (scroll, zoom) during gameplay
 - Shows appropriate control instructions on start screen based on device
+
+### Prompt 3 - Mobile Chrome Fix
+> On mobile google chrome cuts out some of the controls as the browser controls overlap them at the bottom of the screen
+
+**What Claude fixed:**
+- Moved touch controls (joystick + buttons) higher to clear Chrome/Safari bottom navigation bar
+- Used `100dvh` (dynamic viewport height) to account for browser chrome
+- Added `visualViewport` API for accurate canvas sizing
+- Applied `env(safe-area-inset-bottom)` throughout control positioning
+
+### Prompt 4 - Map Fixes & Dog Selection
+> I want to extend the game a bit, eg the map should be adjusted - some bones appear in the water and the bridge to cross the water in the middle isn't accessible. On the home page, you should be able to select your doggo.
+
+**What Claude fixed/added:**
+- **Bridge fix**: Traced the river's sine-wave wobble to calculate exact water tile positions; bridge now dynamically covers the full river width across all path rows (y=18-22)
+- **Bone fix**: Moved bones at [42,14] and [5,35] that were landing inside ponds; added water validation so bones on water tiles are automatically skipped
+- **Dog selector**: Added 6 dog breeds to choose from on the start screen:
+  - Golden, Husky, Chocolate, Dalmatian, Shiba, Black Lab
+  - Each with unique pixel art color palette (body, dark fur, belly, nose)
+  - Interactive selection UI with preview sprites and breed names
+  - Selected breed is applied to the in-game dog sprite

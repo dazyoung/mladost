@@ -6,10 +6,16 @@ import { Camera } from './camera.js';
 import { Renderer } from './renderer.js';
 import { InputManager } from './input.js';
 import { AudioManager } from './audio.js';
+import { SpriteSheet, DOG_BREEDS } from './sprites.js';
 
 class Game {
   constructor() {
     this.canvas = document.getElementById('game-canvas');
+    this.selectedBreed = 'golden';
+
+    // Set up dog selector on start screen
+    this.setupDogSelector();
+
     this.world = new World();
     this.player = new Player(15 * TILE_SIZE, 22 * TILE_SIZE);
     this.camera = new Camera(800, 600);
@@ -55,6 +61,35 @@ class Game {
     });
   }
 
+  setupDogSelector() {
+    const container = document.getElementById('dog-selector');
+    const breedNameEl = document.getElementById('breed-name');
+    if (!container) return;
+
+    const breedIds = Object.keys(DOG_BREEDS);
+
+    breedIds.forEach((id) => {
+      const option = document.createElement('div');
+      option.className = 'dog-option' + (id === this.selectedBreed ? ' selected' : '');
+      option.dataset.breed = id;
+
+      const preview = SpriteSheet.renderBreedPreview(id, 44);
+      if (preview) {
+        preview.style.imageRendering = 'pixelated';
+        option.appendChild(preview);
+      }
+
+      option.addEventListener('click', () => {
+        container.querySelectorAll('.dog-option').forEach(el => el.classList.remove('selected'));
+        option.classList.add('selected');
+        this.selectedBreed = id;
+        breedNameEl.textContent = DOG_BREEDS[id].name;
+      });
+
+      container.appendChild(option);
+    });
+  }
+
   resize() {
     const vv = window.visualViewport;
     const width = vv ? vv.width : window.innerWidth;
@@ -66,6 +101,9 @@ class Game {
   }
 
   async start() {
+    // Apply selected breed
+    this.renderer.sprites.setBreed(this.selectedBreed);
+
     // Hide start screen
     const startScreen = document.getElementById('start-screen');
     startScreen.style.transition = 'opacity 0.5s';

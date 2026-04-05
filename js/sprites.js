@@ -1,9 +1,108 @@
 // Procedural pixel art sprite generator
 // All sprites are drawn programmatically - no external assets needed
 
+// Dog breed color palettes
+export const DOG_BREEDS = {
+  golden: {
+    name: 'Golden',
+    bodyColor: '#c4883a',
+    darkFur: '#a06b28',
+    belly: '#e8c88a',
+    nose: '#3d2817',
+  },
+  husky: {
+    name: 'Husky',
+    bodyColor: '#b0b8c8',
+    darkFur: '#6a7080',
+    belly: '#e8e8f0',
+    nose: '#2a2a35',
+  },
+  chocolate: {
+    name: 'Chocolate',
+    bodyColor: '#6b3a1f',
+    darkFur: '#4a2510',
+    belly: '#a06840',
+    nose: '#2a1008',
+  },
+  dalmatian: {
+    name: 'Dalmatian',
+    bodyColor: '#f0f0f0',
+    darkFur: '#2a2a2a',
+    belly: '#e0e0e0',
+    nose: '#1a1a1a',
+  },
+  shiba: {
+    name: 'Shiba',
+    bodyColor: '#e0a050',
+    darkFur: '#c08030',
+    belly: '#f8f0e0',
+    nose: '#2a1a0a',
+  },
+  blacklab: {
+    name: 'Black Lab',
+    bodyColor: '#2a2a30',
+    darkFur: '#1a1a20',
+    belly: '#3a3a44',
+    nose: '#0a0a0a',
+  },
+};
+
 export class SpriteSheet {
-  constructor() {
+  constructor(breedId = 'golden') {
     this.cache = {};
+    this.setBreed(breedId);
+  }
+
+  setBreed(breedId) {
+    this.breed = DOG_BREEDS[breedId] || DOG_BREEDS.golden;
+    this.breedId = breedId;
+    // Clear cached dog sprites when breed changes
+    for (const key of Object.keys(this.cache)) {
+      if (key.startsWith('dog_')) delete this.cache[key];
+    }
+  }
+
+  // Render a preview of a specific breed (for selection screen)
+  static renderBreedPreview(breedId, size = 64) {
+    const breed = DOG_BREEDS[breedId];
+    if (!breed) return null;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    const scale = Math.floor(size / 16);
+    const p = (x, y, c) => {
+      ctx.fillStyle = c;
+      ctx.fillRect(x * scale, y * scale, scale, scale);
+    };
+
+    const { bodyColor, darkFur, belly, nose } = breed;
+    const eye = '#1a1a1a';
+    const tongue = '#e85555';
+
+    // Body
+    for (let x = 4; x <= 11; x++) for (let y = 4; y <= 11; y++) p(x, y, bodyColor);
+    // Head
+    for (let x = 3; x <= 12; x++) for (let y = 1; y <= 5; y++) p(x, y, bodyColor);
+    // Ears
+    p(3, 0, darkFur); p(3, 1, darkFur); p(12, 0, darkFur); p(12, 1, darkFur);
+    p(2, 1, darkFur); p(13, 1, darkFur);
+    // Eyes
+    p(5, 3, eye); p(10, 3, eye);
+    // Nose
+    p(7, 4, nose); p(8, 4, nose);
+    // Tongue
+    p(7, 5, tongue); p(8, 5, tongue);
+    // Belly
+    for (let x = 6; x <= 9; x++) for (let y = 8; y <= 10; y++) p(x, y, belly);
+    // Legs
+    p(5, 12, bodyColor); p(6, 12, bodyColor); p(5, 13, bodyColor); p(6, 13, bodyColor);
+    p(9, 12, bodyColor); p(10, 12, bodyColor); p(9, 13, bodyColor); p(10, 13, bodyColor);
+    // Tail
+    p(7, 11, darkFur); p(7, 12, darkFur);
+
+    return canvas;
   }
 
   // Create an offscreen canvas with pixel art
@@ -29,10 +128,10 @@ export class SpriteSheet {
     const ctx = canvas.getContext('2d');
     const p = (x, y, c) => this.setPixel(ctx, x, y, c, scale);
 
-    const bodyColor = '#c4883a';
-    const darkFur = '#a06b28';
-    const belly = '#e8c88a';
-    const nose = '#3d2817';
+    const bodyColor = this.breed.bodyColor;
+    const darkFur = this.breed.darkFur;
+    const belly = this.breed.belly;
+    const nose = this.breed.nose;
     const eye = '#1a1a1a';
     const tongue = '#e85555';
 
