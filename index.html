@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Mladost - A Dog's World</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+    <div id="ui-overlay">
+      <div id="interaction-prompt" class="hidden">
+        <span id="prompt-key">E</span>
+        <span id="prompt-text"></span>
+      </div>
+      <div id="dialogue-box" class="hidden">
+        <div id="dialogue-speaker"></div>
+        <div id="dialogue-text"></div>
+        <div id="dialogue-continue">Press E to continue</div>
+      </div>
+      <div id="inventory-bar"></div>
+    </div>
+    <div id="start-screen">
+      <div id="start-content">
+        <h1>Mladost</h1>
+        <p class="subtitle">A Dog's World</p>
+        <div class="pixel-dog-preview"></div>
+        <p class="instructions" id="desktop-controls">
+          <strong>Controls:</strong><br>
+          WASD or Arrow Keys to move<br>
+          E or Space to interact<br>
+          M to toggle music
+        </p>
+        <p class="instructions" id="mobile-controls" style="display:none">
+          <strong>Controls:</strong><br>
+          Virtual joystick to move<br>
+          E button to interact<br>
+          M button to toggle music
+        </p>
+        <button id="start-button">Play</button>
+        <p class="credit">Built with Claude Code</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Show appropriate controls info
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+      var dc = document.getElementById('desktop-controls');
+      var mc = document.getElementById('mobile-controls');
+      if (dc) dc.style.display = 'none';
+      if (mc) mc.style.display = '';
+    }
+  </script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
