@@ -42,9 +42,12 @@ class Game {
     this.dialogueSpeaker = document.getElementById('dialogue-speaker');
     this.dialogueText = document.getElementById('dialogue-text');
 
-    // Handle resize
+    // Handle resize - use visualViewport on mobile for accurate size
     this.resize();
     window.addEventListener('resize', () => this.resize());
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', () => this.resize());
+    }
 
     // Start button
     document.getElementById('start-button').addEventListener('click', () => {
@@ -53,8 +56,9 @@ class Game {
   }
 
   resize() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const vv = window.visualViewport;
+    const width = vv ? vv.width : window.innerWidth;
+    const height = vv ? vv.height : window.innerHeight;
     this.canvas.width = width;
     this.canvas.height = height;
     this.renderer.resize(width, height);

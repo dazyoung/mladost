@@ -26,6 +26,7 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100dvh; /* accounts for mobile browser chrome */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -214,13 +215,13 @@ body {
 
   #dialogue-box {
     width: 95%;
-    bottom: 180px;
+    bottom: calc(240px + env(safe-area-inset-bottom, 0px));
     font-size: 13px;
     padding: 12px 14px;
   }
 
   #interaction-prompt {
-    bottom: 190px;
+    bottom: calc(250px + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -230,9 +231,9 @@ body {
   }
 }
 
-/* Safe area padding for notched phones */
-@supports (padding: env(safe-area-inset-bottom)) {
-  #touch-controls {
-    padding-bottom: env(safe-area-inset-bottom);
+/* Mobile Chrome / Safari bottom bar compensation */
+@media (max-height: 500px) {
+  #dialogue-box {
+    bottom: calc(200px + env(safe-area-inset-bottom, 0px));
   }
 }

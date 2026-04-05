@@ -65,7 +65,7 @@ export class InputManager {
       }
       #joystick-zone {
         position: absolute;
-        bottom: 20px;
+        bottom: calc(80px + env(safe-area-inset-bottom, 0px));
         left: 20px;
         width: 150px;
         height: 150px;
@@ -95,7 +95,7 @@ export class InputManager {
       }
       #touch-buttons {
         position: absolute;
-        bottom: 30px;
+        bottom: calc(90px + env(safe-area-inset-bottom, 0px));
         right: 20px;
         display: flex;
         flex-direction: column;
