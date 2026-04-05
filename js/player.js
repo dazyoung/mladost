@@ -105,6 +105,9 @@ export class Player {
     );
     if (bone && !bone.collected) {
       bone.collected = true;
+      if (bone.isGolden) {
+        return { type: 'golden_bone_collected' };
+      }
       this.bones++;
       this.totalBones++;
       return { type: 'bone_collected', total: this.bones };

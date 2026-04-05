@@ -13,6 +13,7 @@ export class InputManager {
     this.justPressed = {
       interact: false,
       music: false,
+      addDog: false,
     };
 
     this.isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -54,10 +55,10 @@ export class InputManager {
             <ellipse cx="15" cy="20" rx="6" ry="5"/>
           </svg>
         </button>
-        <button id="btn-music" class="touch-btn touch-btn-small" aria-label="Toggle Music">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-            <path d="M14 2v10.3A3.5 3.5 0 1 0 16 15.5V5h-2V2h2V0h-4v2z"/>
-            <circle cx="12.5" cy="15.5" r="2.5"/>
+        <button id="btn-add-dog" class="touch-btn touch-btn-small" aria-label="Add NPC Dog">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <rect x="9" y="3" width="2" height="14" rx="1"/>
+            <rect x="3" y="9" width="14" height="2" rx="1"/>
           </svg>
         </button>
       </div>
@@ -204,10 +205,10 @@ export class InputManager {
       this.keys.interact = false;
     });
 
-    const btnMusic = document.getElementById('btn-music');
-    btnMusic.addEventListener('touchstart', (e) => {
+    const btnAddDog = document.getElementById('btn-add-dog');
+    btnAddDog.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      this.justPressed.music = true;
+      this.justPressed.addDog = true;
     }, { passive: false });
   }
 
@@ -263,6 +264,10 @@ export class InputManager {
         break;
       case 'KeyM':
         this.justPressed.music = true;
+        e.preventDefault();
+        break;
+      case 'KeyN':
+        this.justPressed.addDog = true;
         e.preventDefault();
         break;
     }

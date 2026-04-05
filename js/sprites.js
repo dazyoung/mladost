@@ -513,6 +513,38 @@ export class SpriteSheet {
     return canvas;
   }
 
+  // Golden bone (special collectible)
+  getGoldenBone() {
+    const key = 'golden_bone';
+    if (this.cache[key]) return this.cache[key];
+
+    const scale = 2;
+    const canvas = this.createCanvas(14 * scale, 10 * scale);
+    const ctx = canvas.getContext('2d');
+    const p = (x, y, c) => this.setPixel(ctx, x, y, c, scale);
+
+    const gold = '#ffd700';
+    const goldDark = '#daa520';
+    const shine = '#fff8dc';
+
+    // Shaft
+    for (let x = 4; x <= 9; x++) {
+      p(x, 4, gold); p(x, 5, goldDark);
+    }
+    // Ends
+    p(2, 3, gold); p(3, 3, gold); p(2, 4, gold); p(3, 4, gold);
+    p(2, 5, goldDark); p(3, 5, goldDark); p(2, 6, goldDark); p(3, 6, goldDark);
+    p(10, 3, gold); p(11, 3, gold); p(10, 4, gold); p(11, 4, gold);
+    p(10, 5, goldDark); p(11, 5, goldDark); p(10, 6, goldDark); p(11, 6, goldDark);
+    // Shine highlights
+    p(3, 3, shine); p(5, 4, shine); p(10, 3, shine);
+    // Star sparkle
+    p(7, 1, shine); p(6, 2, shine); p(8, 2, shine); p(7, 2, gold);
+
+    this.cache[key] = canvas;
+    return canvas;
+  }
+
   // Bridge
   getBridge() {
     const key = 'bridge';

@@ -415,6 +415,18 @@ export class World {
         bobOffset: Math.random() * Math.PI * 2,
       });
     }
+
+    // Golden bone - hidden in the flower patch (where the sign hints)
+    this.collectibles.push({
+      type: 'golden_bone',
+      x: 10 * TILE_SIZE,
+      y: 10 * TILE_SIZE,
+      width: 28,
+      height: 20,
+      collected: false,
+      bobOffset: 0,
+      isGolden: true,
+    });
   }
 
   placeNPCs() {

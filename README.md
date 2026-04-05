@@ -13,17 +13,19 @@ A relaxing 2D exploration game where you play as a dog roaming through a peacefu
 
 ### Mobile
 - **Virtual Joystick** (left side) - Move your dog
-- **E Button** (right side) - Interact / Bark
-- **M Button** - Toggle music
+- **Paw Button** (right side) - Interact / Bark
+- **+ Button** - Create an NPC doggo
 
 ## Features
 
 - 6 selectable dog breeds (Golden, Husky, Chocolate, Dalmatian, Shiba, Black Lab)
 - Pixel art dog character with directional walk animations
+- **NPC Dogs** - Create up to 5 AI-powered companion dogs with unique personalities and skills
+- **Chat System** - Talk to NPC dogs with free text or quick replies; they respond based on personality
 - Procedurally generated sprite art (no external image assets)
 - Tile-based world with grass, paths, water, sand, and bridges
 - Interactive objects: signs, berry bushes, dog house, cottage
-- Collectible bones scattered throughout the map
+- Collectible bones + a hidden legendary golden bone
 - Animated butterflies and water tiles
 - Procedural ambient music via Web Audio API
 - Dialogue system for reading signs and interacting with objects
@@ -58,6 +60,7 @@ mladost/
     camera.js         - Smooth-following camera
     renderer.js       - Canvas rendering, sprites, particles, HUD
     sprites.js        - Procedural pixel art sprite generator
+    npc-dogs.js       - NPC dog personality engine + response generation
     input.js          - Keyboard + touch input handling
     audio.js          - Web Audio API procedural music + SFX
 ```
@@ -123,3 +126,42 @@ This project was built interactively using [Claude Code](https://claude.ai/code)
   - Each with unique pixel art color palette (body, dark fur, belly, nose)
   - Interactive selection UI with preview sprites and breed names
   - Selected breed is applied to the in-game dog sprite
+
+### Prompt 5 - Naming & Icon Buttons
+> I don't want it to be called a dog's world. Don't make E the action button on mobile, just have an action button with a symbol instead
+
+**What Claude changed:**
+- Renamed to just "Mladost" with subtitle "Explore. Sniff. Discover."
+- Replaced text buttons with SVG icons: paw print for interact, music note for toggle
+
+### Prompt 6 - NPC Dogs with Personality Engine & Golden Bone
+> I want to be able to create NPC doggos. They should be powered by a basic LLM to give them personality. I should have a button instead of the music button which allows me to add a new one. There should be max of 5 of them. I should be able to interact with them, write predefined or free text messages to get a response. When creating them I should have a popup with some options which will guide their skills, personality and appearance
+
+**What Claude built:**
+- **NPC Dog System** (up to 5 dogs):
+  - Creation popup with name, breed, personality, and skill selection
+  - 6 personality types: Friendly, Shy, Adventurous, Wise, Playful, Grumpy
+  - 5 skill types: Guide, Storyteller, Forager, Guard, Comedian
+  - Dogs wander around near their spawn point with idle/walk states
+  - Name tags displayed above each NPC dog
+- **Personality-Driven Response Engine** (`npc-dogs.js`):
+  - Intent detection via keyword matching (greetings, questions, topics, farewells, etc.)
+  - Personality-specific greetings, farewells, and tone modifiers
+  - Skill-specific knowledge responses (directions, stories, jokes, foraging tips, etc.)
+  - Template system with dynamic variable substitution
+  - Chat history per NPC dog
+- **Chat Interface**:
+  - Opens when interacting with an NPC dog
+  - Quick reply buttons for common messages
+  - Free text input for custom messages
+  - Chat bubble history with player/NPC styling
+  - Auto-greeting on first interaction
+- **Mobile Controls Update**:
+  - Replaced music button with + (add dog) button
+  - Music plays by default, M key still works on desktop
+  - N key opens create dog popup on desktop
+- **Golden Bone**:
+  - Hidden legendary collectible in the flower patch
+  - Special golden sprite with glow effect and rotating sparkles
+  - Finding all regular bones hints at its existence
+  - Special dialogue when discovered

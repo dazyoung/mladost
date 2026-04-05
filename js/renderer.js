@@ -292,15 +292,41 @@ export class Renderer {
     const bob = Math.sin(Date.now() * 0.003 + item.bobOffset) * 3;
     const sy = Math.floor(item.y - cam.y + bob);
 
-    const sprite = this.sprites.getBone();
-    ctx.drawImage(sprite, sx, sy, item.width, item.height);
+    if (item.isGolden) {
+      const sprite = this.sprites.getGoldenBone();
+      ctx.drawImage(sprite, sx, sy, item.width, item.height);
 
-    // Sparkle effect
-    const sparkle = Math.sin(Date.now() * 0.005 + item.bobOffset) * 0.5 + 0.5;
-    ctx.globalAlpha = sparkle * 0.6;
-    ctx.fillStyle = '#ffe8a0';
-    ctx.fillRect(sx + item.width / 2 - 1, sy - 4, 2, 2);
-    ctx.globalAlpha = 1;
+      // Enhanced golden glow
+      const glow = Math.sin(Date.now() * 0.004) * 0.3 + 0.5;
+      ctx.globalAlpha = glow * 0.4;
+      ctx.fillStyle = '#ffd700';
+      ctx.beginPath();
+      ctx.ellipse(sx + item.width / 2, sy + item.height / 2, 18, 14, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
+      // Rotating sparkles
+      const t = Date.now() * 0.002;
+      for (let i = 0; i < 3; i++) {
+        const angle = t + (i * Math.PI * 2) / 3;
+        const sparkX = sx + item.width / 2 + Math.cos(angle) * 14;
+        const sparkY = sy + item.height / 2 + Math.sin(angle) * 10;
+        ctx.fillStyle = '#fff8dc';
+        ctx.globalAlpha = 0.7;
+        ctx.fillRect(sparkX - 1, sparkY - 1, 2, 2);
+      }
+      ctx.globalAlpha = 1;
+    } else {
+      const sprite = this.sprites.getBone();
+      ctx.drawImage(sprite, sx, sy, item.width, item.height);
+
+      // Sparkle effect
+      const sparkle = Math.sin(Date.now() * 0.005 + item.bobOffset) * 0.5 + 0.5;
+      ctx.globalAlpha = sparkle * 0.6;
+      ctx.fillStyle = '#ffe8a0';
+      ctx.fillRect(sx + item.width / 2 - 1, sy - 4, 2, 2);
+      ctx.globalAlpha = 1;
+    }
   }
 
   drawNPC(ctx, npc, cam) {
@@ -334,7 +360,7 @@ export class Renderer {
 
   drawHUD(ctx, player, world) {
     const padding = 12;
-    const totalBones = world.collectibles.length;
+    const totalBones = world.collectibles.filter(c => !c.isGolden).length;
 
     // Bone counter - top left
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';

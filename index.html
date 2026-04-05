@@ -24,6 +24,54 @@
       </div>
       <div id="inventory-bar"></div>
     </div>
+
+    <!-- NPC Dog Creation Popup -->
+    <div id="create-dog-overlay" class="modal-overlay hidden">
+      <div id="create-dog-popup" class="modal-popup">
+        <div class="modal-header">
+          <h2>Create a New Doggo</h2>
+          <button id="create-dog-close" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <label class="modal-label">Name</label>
+          <input type="text" id="npc-name" class="modal-input" placeholder="Enter a name..." maxlength="16" />
+
+          <label class="modal-label">Appearance</label>
+          <div id="npc-breed-selector" class="option-grid breed-grid"></div>
+
+          <label class="modal-label">Personality</label>
+          <div id="npc-personality-selector" class="option-grid"></div>
+
+          <label class="modal-label">Skill</label>
+          <div id="npc-skill-selector" class="option-grid"></div>
+
+          <button id="create-dog-confirm" class="modal-btn-primary">Create Doggo!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NPC Dog Chat UI -->
+    <div id="chat-overlay" class="modal-overlay hidden">
+      <div id="chat-popup" class="modal-popup chat-popup">
+        <div class="modal-header chat-header">
+          <div id="chat-npc-info">
+            <canvas id="chat-npc-avatar" width="32" height="32"></canvas>
+            <span id="chat-npc-name">Dog</span>
+            <span id="chat-npc-trait" class="chat-trait"></span>
+          </div>
+          <button id="chat-close" class="modal-close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div id="chat-quick-replies" class="chat-quick-replies"></div>
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" class="modal-input chat-input" placeholder="Say something..." maxlength="200" />
+          <button id="chat-send" class="chat-send-btn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M2 10l7-7v4h9v6h-9v4z" transform="rotate(180 10 10)"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div id="start-screen">
       <div id="start-content">
         <h1>Mladost</h1>
@@ -33,15 +81,16 @@
         <p id="breed-name" class="breed-name">Golden</p>
         <p class="instructions" id="desktop-controls">
           <strong>Controls:</strong><br>
-          WASD or Arrow Keys to move<br>
-          E or Space to interact<br>
+          WASD / Arrows to move<br>
+          E / Space to interact<br>
+          N to add NPC doggo<br>
           M to toggle music
         </p>
         <p class="instructions" id="mobile-controls" style="display:none">
           <strong>Controls:</strong><br>
           Joystick to move<br>
           Paw button to interact<br>
-          Music button to toggle music
+          + button to add NPC doggo
         </p>
         <button id="start-button">Play</button>
         <p class="credit">Built with Claude Code</p>
